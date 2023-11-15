@@ -87,7 +87,8 @@ namespace PMStest.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Project project = db.Project.Where(q => q.ID == id).Include(p => p.Activity.Where(o => o.IsDelete != true).ToList()).First();
+            Project project = db.Project.Find(id);
+            project.Activity = db.Activity.Where(q => q.ProjectID == id && q.IsDelete != true).OrderBy(q=>q.Detail).ToList();
             if (project == null)
             {
                 return HttpNotFound();
@@ -124,7 +125,8 @@ namespace PMStest.Controllers
                 //edit update
                 project.UpdateDate = DateTime.Now;
 
-                SaveChilden(project.Activity, project);
+                project.Activity = RemoveChilden(project.Activity,1);
+                SaveChilden(project.Activity, project,null);
 
                 db.Entry(project).State = EntityState.Modified;
                 db.SaveChanges();
@@ -149,12 +151,12 @@ namespace PMStest.Controllers
 
 
         //Save All Activity and Sub to DB if not create spread to Create new one
-        private void SaveChilden(ICollection<Models.Activity> activity,Project project) { 
+        private void SaveChilden(ICollection<Models.Activity> activity,Project project,Activity parent) { 
             foreach (var item in activity)
             {
                 if (item.CreateDate != null)
                 {
-                    SaveChilden(item.Activity1,project);
+                    SaveChilden(item.Activity1,project, item);
 
                     item.UpdateDate = project.UpdateDate;
                     db.Entry(item).State = EntityState.Modified;
@@ -164,7 +166,12 @@ namespace PMStest.Controllers
                     item.CreateDate = project.UpdateDate;
                     item.UpdateDate = project.UpdateDate;
                     item.IsDelete = false;
-
+                    item.ProjectID = project.ID;
+                    if (parent != null)
+                    {
+                        item.ParentID = parent.ID;
+                    }
+        
                     AddParamAllActivityUpdate(item.Activity1, project);
                     //add some year
                     db.Activity.Add(item);
