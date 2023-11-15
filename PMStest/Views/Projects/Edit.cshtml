@@ -1,0 +1,108 @@
+﻿@model PMStest.Models.Project
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>แก้ไขโครงการ</h2>
+
+<script>
+    function AddActivity(e) {
+            e.value = true
+            $("#myform").attr("action", '@Url.Action("AddActivityEdit", "Projects")');
+            $("#myform").submit();
+    };
+    function DeleteThisActivity(e) {
+        e.value = true
+        $("#myform").attr("action", '@Url.Action("DeleteThisActivityEdit", "Projects")');
+        $("#myform").submit();
+};
+</script>
+
+@using (Html.BeginForm("Edit", "Projects", FormMethod.Post, new { role = "form", id = "myform", name = "myform" }))
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ID)
+    @Html.HiddenFor(model => model.CreateDate)
+    @Html.HiddenFor(model => model.IsDelete)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="d-flex gap-4 pt-2">
+        <div class="form-group">
+            @Html.LabelFor(model => model.StartDate, htmlAttributes: new { @class = "control-label" })
+            <div class="">
+                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+            </div>
+            <p class="pt-1 m-0">หากไม่ต้องการแก้ไขกรุณาระบุเป็นวันที่ @Model.StartDate.Value.ToString("dd/MM/yyyy")</p>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.EndDate, htmlAttributes: new { @class = "control-label" })
+            <div class="">
+                @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+            </div>
+            <p class="pt-1 m-0">หากไม่ต้องการแก้ไขกรุณาระบุเป็นวันที่ @Model.EndDate.Value.ToString("dd/MM/yyyy")</p>
+        </div>
+    </div>
+
+    @Html.HiddenFor(model => model.IsAddActivity, new { Value = false })
+    <div class="form-group mb-2">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="เพิ่มกิจกรรม" class="btn btn-info mt-3" onclick="AddActivity(@Html.IdFor(model => model.IsAddActivity));" />
+        </div>
+    </div>
+
+    <table class="table table-bordered">
+        <tr>
+            <th>
+                กิจกรรมหลัก
+            </th>
+            <th>
+                กิจกรรมย่อย
+            </th>
+            <th>
+                
+            </th>
+            <th>
+                จัดการ
+            </th>
+        </tr>
+
+        @{
+            int i = 0;
+            foreach (var item in Model.Activity)
+            {
+                @Html.EditorFor(m => item, "DifferentActivity", "Activity[" + i++ + "]")
+            }
+        }
+
+    </table>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="บันทึกการแก้ไข" class="btn btn-secondary mt-3" />
+            </div>
+        </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("ย้อนกลับ", "Index")
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="pms_testModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityContainer Name="pms_testEntities1" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Activity" EntityType="pms_testModel.Activity" />
+    <EntitySet Name="Project" EntityType="pms_testModel.Project" />
+    <AssociationSet Name="FK_Activity_Activity" Association="pms_testModel.FK_Activity_Activity">
+      <End Role="Activity" EntitySet="Activity" />
+      <End Role="Activity1" EntitySet="Activity" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Activity_Project" Association="pms_testModel.FK_Activity_Project">
+      <End Role="Project" EntitySet="Project" />
+      <End Role="Activity" EntitySet="Activity" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="Activity">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProjectID" Type="Int32" Nullable="false" />
+    <Property Name="ParentID" Type="Int32" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+    <Property Name="IsDelete" Type="Boolean" />
+    <Property Name="Detail" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Lv" Type="Int32" />
+    <NavigationProperty Name="Activity1" Relationship="pms_testModel.FK_Activity_Activity" FromRole="Activity" ToRole="Activity1" />
+    <NavigationProperty Name="Activity2" Relationship="pms_testModel.FK_Activity_Activity" FromRole="Activity1" ToRole="Activity" />
+    <NavigationProperty Name="Project" Relationship="pms_testModel.FK_Activity_Project" FromRole="Activity" ToRole="Project" />
+  </EntityType>
+  <EntityType Name="Project">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CreateDate" Type="DateTime" Precision="3" />
+    <Property Name="UpdateDate" Type="DateTime" Precision="3" />
+    <Property Name="IsDelete" Type="Boolean" />
+    <Property Name="Name" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="StartDate" Type="DateTime" Precision="7" />
+    <Property Name="EndDate" Type="DateTime" Precision="7" />
+    <NavigationProperty Name="Activity" Relationship="pms_testModel.FK_Activity_Project" FromRole="Project" ToRole="Activity" />
+  </EntityType>
+  <Association Name="FK_Activity_Activity">
+    <End Type="pms_testModel.Activity" Role="Activity" Multiplicity="0..1" />
+    <End Type="pms_testModel.Activity" Role="Activity1" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Activity">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Activity1">
+        <PropertyRef Name="ParentID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Activity_Project">
+    <End Type="pms_testModel.Project" Role="Project" Multiplicity="1" />
+    <End Type="pms_testModel.Activity" Role="Activity" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Project">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Activity">
+        <PropertyRef Name="ProjectID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

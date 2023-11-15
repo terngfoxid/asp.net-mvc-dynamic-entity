@@ -1,0 +1,72 @@
+﻿@model PMStest.Models.Activity
+
+@Html.HiddenFor(model => model.ID)
+@Html.HiddenFor(model => model.Lv)
+@Html.HiddenFor(model => model.ProjectID)
+@Html.HiddenFor(model => model.ParentID)
+@Html.HiddenFor(model => model.CreateDate)
+@Html.HiddenFor(model => model.UpdateDate)
+@Html.HiddenFor(model => model.IsDelete, new { Value = Model.IsDelete })
+
+@Html.HiddenFor(model => model.IsAddActivity, new { Value = false })
+@Html.HiddenFor(model => model.IsDeleteThisActivity, new { Value = false })
+
+@if (Model.IsDelete != true)
+{
+    <tr>
+
+        @for (var i = 1; i <= 4; i++)
+        {
+            if (Model.Lv == i)
+            {
+                <td>@Html.EditorFor(model => model.Detail)</td>
+            }
+            else
+            {
+                if (i != 4)
+                {
+                    <td></td>
+                }
+                else
+                {
+                    if (Model.Lv != 3)
+                    {
+                        <td>
+                            <input type="submit" value="เพิ่ม" class="btn btn-info mt-3" onclick="AddActivity(@Html.IdFor(model => model.IsAddActivity));" /> |
+                            <input type="submit" value="ลบ" class="btn btn-danger mt-3" onclick="DeleteThisActivity(@Html.IdFor(model => model.IsDeleteThisActivity));" />
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <input type="submit" value="ลบ" class="btn btn-danger mt-3" onclick="DeleteThisActivity(@Html.IdFor(model => model.IsDeleteThisActivity));" />
+                        </td>
+                    }
+                }
+            }
+        }
+    </tr>
+    <tr><td>---</td></tr>
+    if (Model.Activity1.Count > 0)
+    {
+        int i = 0;
+        foreach (var item in Model.Activity1)
+        {
+            @Html.EditorFor(m => item, "DifferentActivity", "Activity1[" + i++ + "]")
+        }
+    }
+}
+else
+{
+    @Html.HiddenFor(model => model.Detail)
+    <tr><td>---</td></tr>
+    if (Model.Activity1.Count > 0)
+    {
+        int i = 0;
+        foreach (var item in Model.Activity1)
+        {
+            @Html.EditorFor(m => item, "DifferentActivity", "Activity1[" + i++ + "]")
+        }
+    }
+}
+
