@@ -69,6 +69,7 @@ namespace PMStest.Controllers
             return View(project);
         }
 
+        //Add papram need for Create
         private void AddParamAllActivity(ICollection<Models.Activity> activity,Project project) {
             foreach (var item in activity)
             {
@@ -96,6 +97,7 @@ namespace PMStest.Controllers
             return View(project);
         }
 
+        //Remove Duplicate Item
         private ICollection<Models.Activity> RemoveChilden(ICollection<Models.Activity> activity,int LvCheck) {
             if (activity.Where(q => q.Lv != LvCheck).Count() > 0)
             {
@@ -132,6 +134,7 @@ namespace PMStest.Controllers
             return View(project);
         }
 
+        //Add papram need for Create
         private void AddParamAllActivityUpdate(ICollection<Models.Activity> activity, Project project)
         {
             foreach (var item in activity)
@@ -144,6 +147,8 @@ namespace PMStest.Controllers
             }
         }
 
+
+        //Save All Activity and Sub to DB if not create spread to Create new one
         private void SaveChilden(ICollection<Models.Activity> activity,Project project) { 
             foreach (var item in activity)
             {
@@ -241,6 +246,7 @@ namespace PMStest.Controllers
             return View("Create", project);
         }
 
+        //Find item need add new Activity()
         private void FindIsAddActivity(ICollection<Activity> activity)
         {
             foreach (var item in activity) {
@@ -261,6 +267,7 @@ namespace PMStest.Controllers
             return View("Create", project);
         }
 
+        //Delete element need to delete from create form
         private ICollection<Activity> ClearDeleteThisActivity(ICollection<Activity> activity)
         {
             if (activity.Where(q => q.IsDeleteThisActivity == true).Count() > 0)
@@ -283,6 +290,7 @@ namespace PMStest.Controllers
             return View("Edit", project);
         }
 
+        //Find what item need to set IsDelete
         private ICollection<Models.Activity> ClearDeleteThisActivityEdit(ICollection<Models.Activity> activity,int LvCheck)
         {
             if (activity.Where(q => q.Lv != LvCheck).Count() > 0) {
@@ -308,6 +316,7 @@ namespace PMStest.Controllers
             return activity;
         }
 
+        //Set Is Delete all item parent is Delete
         private ICollection<Models.Activity> SetIsDeleteAllChilden(ICollection<Models.Activity> activity)
         {
             foreach (var item in activity) {
